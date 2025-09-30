@@ -150,9 +150,19 @@ function zoom() {
                 const transcriptTargetNode = element
 
                 if (transcriptTargetNode) {
-                  // Attempt to dim down the transcript
-                  // @ts-ignore
-                  transcriptTargetNode.style.opacity = "0.5"
+                  // Ocultar o atenuar subtítulos según preferencia del usuario
+                  chrome.storage.sync.get(["hideSubtitles"], (result) => {
+                    // @ts-ignore
+                    if (result.hideSubtitles) {
+                      transcriptTargetNode.style.opacity = "0"
+                      // @ts-ignore
+                      transcriptTargetNode.style.pointerEvents = "none"
+                    }
+                    else {
+                      // @ts-ignore
+                      transcriptTargetNode.style.opacity = "0.5"
+                    }
+                  })
 
                   console.log("Registering mutation observer on .live-transcription-subtitle__box")
 

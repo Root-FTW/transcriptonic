@@ -129,8 +129,12 @@ function teams() {
       let transcriptObserver
 
       waitForElement(`[data-tid="closed-caption-renderer-wrapper"]`).then((element) => {
-        // Reduce the height from 43% to 20%
-        element?.setAttribute("style", "height:20%")
+        // Ajusta el alto del contenedor de subtítulos según preferencia
+        chrome.storage.sync.get(["hideSubtitles"], (result) => {
+          if (element) {
+            element.setAttribute("style", result.hideSubtitles ? "height:0%" : "height:20%")
+          }
+        })
       })
 
       // **** REGISTER TRANSCRIPT LISTENER **** //
@@ -141,8 +145,10 @@ function teams() {
         const transcriptTargetNode = element
 
         if (transcriptTargetNode) {
-          // Attempt to dim down the transcript
-          transcriptTargetNode.setAttribute("style", "opacity:0.2")
+          // Ocultar o atenuar subtítulos según preferencia del usuario
+          chrome.storage.sync.get(["hideSubtitles"], (result) => {
+            transcriptTargetNode.setAttribute("style", result.hideSubtitles ? "opacity:0; pointer-events:none" : "opacity:0.2")
+          })
 
           console.log(`Registering mutation observer on [data-tid="closed-caption-v2-virtual-list-content"]`)
 

@@ -73,4 +73,18 @@ window.onload = function () {
   // notice?.addEventListener("click", () => {
   //   alert("The transcript may not always be accurate and is only intended to aid in improving productivity. It is the responsibility of the user to ensure they comply with any applicable laws/rules.")
   // })
+
+  // Initialize and persist "hide subtitles" preference
+  document.addEventListener("DOMContentLoaded", () => {
+    const hideSubtitlesCheckbox = /** @type {HTMLInputElement|null} */ (document.getElementById("hide-subtitles"))
+    if (hideSubtitlesCheckbox) {
+      chrome.storage.sync.get(["hideSubtitles"], (result) => {
+        hideSubtitlesCheckbox.checked = Boolean(result.hideSubtitles)
+      })
+
+      hideSubtitlesCheckbox.addEventListener("change", () => {
+        chrome.storage.sync.set({ hideSubtitles: hideSubtitlesCheckbox.checked })
+      })
+    }
+  })
 }

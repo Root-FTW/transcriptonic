@@ -184,8 +184,15 @@ function meetingRoutines(uiType) {
         const transcriptTargetNode = document.querySelector(`div[role="region"][tabindex="0"]`)
 
         if (transcriptTargetNode) {
-          // Attempt to dim down the transcript
-          transcriptTargetNode.setAttribute("style", "opacity:0.2")
+          // Ocultar o atenuar subtítulos según preferencia del usuario
+          chrome.storage.sync.get(["hideSubtitles"], (result) => {
+            if (result.hideSubtitles) {
+              transcriptTargetNode.setAttribute("style", "opacity:0; pointer-events:none")
+            }
+            else {
+              transcriptTargetNode.setAttribute("style", "opacity:0.2")
+            }
+          })
 
           // Create transcript observer instance linked to the callback function. Registered irrespective of operation mode, so that any visible transcript can be picked up during the meeting, independent of the operation mode.
           transcriptObserver = new MutationObserver(transcriptMutationCallback)
